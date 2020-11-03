@@ -1,68 +1,94 @@
 import tkinter
-import math
 import PathFindingGrid
 
-GRID_SIZE = 20
+def start_btn():
+    grid.run()
+
+def left_move(event):
+    if state == "normal":
+        # if canvas.winfo_x() <= event.x <= canvas.winfo_x() + int(canvas['width']):
+        #     if canvas.winfo_y() <= event.y <= canvas.winfo_y() + int(canvas['height']):
+        print(event.x,event.y, canvas.winfo_x(), canvas.winfo_y(),canvas.winfo_rootx(), canvas.winfo_rooty(),)
+        # print(event.x,event.y)
+        grid.set_blocked_state(event.x, event.y, True)
 
 
-def click_event(event):
-    y = int(math.floor(event.y / 40)) * 40
-    x = int(math.floor(event.x / 40)) * 40
-    if int(x / 40) < GRID_SIZE and int(y / 40) < GRID_SIZE:
-        node = grid.grid[int(x / 40)][int(y / 40)]
-        if not node.is_blocked:
-            grid.blocked_counter += 1
-            node.is_blocked = True
-            node.set_color("blue")
-        else:
-            grid.blocked_counter -= 1
-            node.is_blocked = False
-            node.set_color("white")
+
+def right_move(event):
+    if canvas.winfo_x() <= event.x <= canvas.winfo_x() + int(canvas['width']):
+        if canvas.winfo_y() <= event.y <= canvas.winfo_y() + int(canvas['height']):
+            grid.set_blocked_state(event.x, event.y, False)
+
+def scale_canvas():
+    grid.change_gridsize(scale_var.get(), scale_var.get())
+
+def set_point(event):
+    global state
+
+    if state == "placing_source_point":
+        grid.set_source(event.x, event.y)
+    elif state == "placing_end_point":
+        grid.set_end_point(event.x, event.y)
+
+    canvas.unbind("<Button-1>")
+    canvas.unbind("<Motion>")
+    grid.ui.current_rect_position = -1,-1
+    state = "normal"
+
+def set_source_btn():
+    global state
+    state = "placing_source_point"
+    print(state)
+    canvas.bind("<Button-1>", set_point)
+    canvas.bind("<Motion>",lambda event: canvas_motion_event(event,"green"))
 
 
-def right_click_event(event):
-    y = int(math.floor(event.y / 40)) * 40
-    x = int(math.floor(event.x / 40)) * 40
-    if int(x / 40) < GRID_SIZE and int(y / 40) < GRID_SIZE:
-        grid.set_source(int(x / 40), int(y / 40))
+def set_end_btn():
+    global state
+    state = "placing_end_point"
+    print(state)
+    canvas.bind("<Button-1>", set_point)
+    canvas.bind("<Motion>",lambda event: canvas_motion_event(event,"black"))
 
-
-def do(event):
-    if event.char == 'd':
-        grid.draw_array()
-
-    if event.char == 'c':
-        grid.construct_adj_list()
-
-    if event.char == 's':
-        grid.run()
-
-    if event.char == 'n':
-        y = int(math.floor(event.y / 40)) * 40
-        x = int(math.floor(event.x / 40)) * 40
-        if int(x / 40) < GRID_SIZE and int(y / 40) < GRID_SIZE:
-            grid.showneighbours(int(x / 40), int(y / 40))
-
-    if event.char == 'e':
-        y = int(math.floor(event.y / 40)) * 40
-        x = int(math.floor(event.x / 40)) * 40
-        if int(x / 40) < GRID_SIZE and int(y / 40) < GRID_SIZE:
-            grid.set_end_point(int(x / 40), int(y / 40))
-
+def canvas_motion_event(event,color):
+    grid.ui.draw_rect_on_hover(event.x, event.y,color)
 
 main = tkinter.Tk()
 main.title("Pathfinder Visualizer")
-main.geometry("800x800")
+main.geometry("1000x1000")
 
 canvas = tkinter.Canvas(main, width=800, height=800)
 canvas.configure(bg="white")
-canvas.pack()
+canvas.grid(row=1, column=1, rowspan=2,columnspan=4)
+
+scale_var = tkinter.IntVar()
+w1 = tkinter.Scale(main, from_=5, to=60, tickinterval=5, length=600, variable=scale_var)
+w1.grid(row=1, column=0)
+
+buttonFrame = tkinter.Frame(main, bg="grey", height=100)
+buttonFrame.grid(row=0, column=0, columnspan=5, sticky="E")
+
+btn = tkinter.Button(main, text="OK", command=scale_canvas)
+btn.grid(row=2, column=0, sticky="N")
+
+btn_start = tkinter.Button(buttonFrame, text="Start", command=start_btn)
+btn_start.pack(side="left")
+
+btn_set_source = tkinter.Button(buttonFrame, text="Set Source Point", command=set_source_btn)
+btn_set_source.pack(side="left")
+
+btn_set_end = tkinter.Button(buttonFrame, text="Set End Point", command=set_end_btn)
+btn_set_end.pack(side="left")
 
 grid = PathFindingGrid.PathFinderGrid(canvas)
-grid.draw_grid()
 
-main.bind("<Button-2>", click_event)
+state = "normal"
+
+main.update()
+
+print("Root ", canvas.winfo_rootx(), canvas.winfo_rooty())
+print("XY, SCALE WIDTH ", canvas.winfo_x(), canvas.winfo_y(), w1['width'])
+canvas.bind("<B1-Motion>", left_move)
+canvas.bind("<B3-Motion>", right_move)
 main.bind("<Return>", grid.reset)
-main.bind("<Button-3>", right_click_event)
-main.bind("<Key>", do)
 main.mainloop()
