@@ -1,6 +1,7 @@
 import numpy
 import math
 
+
 class UIDrawer:
     def __init__(self, canvas, col_num, row_num):
         self.canvas = canvas
@@ -9,7 +10,7 @@ class UIDrawer:
         self.canvas_width = int(canvas['width'])
         self.canvas_height = int(canvas['height'])
         self.rect_size = self.canvas_height / row_num
-        self.current_rect_position = -1,-1
+        self.current_rect_position = -1, -1
         print(self.rect_size, self.canvas_height, canvas['height'])
 
     def draw_rect(self, i, j, color="blue"):
@@ -35,13 +36,13 @@ class UIDrawer:
     def update(self):
         self.canvas.update()
 
-    def draw_rect_on_hover(self,x,y,color):
-        i,j = self.get_indexes_from_coords(x,y)
-        if self.current_rect_position != (i,j):
-            k,l = self.current_rect_position
-            self.draw_rect(k,l,"white")
-            self.current_rect_position = i,j
-            self.draw_rect(i,j,color)
+    def draw_rect_on_hover(self, x, y, color):
+        i, j = self.get_indexes_from_coords(x, y)
+        if self.current_rect_position != (i, j):
+            k, l = self.current_rect_position
+            self.draw_rect(k, l, "white")
+            self.current_rect_position = i, j
+            self.draw_rect(i, j, color)
 
     def change_gridsize(self, new_col_num, new_row_num):
         self.col_num = new_col_num
@@ -51,7 +52,7 @@ class UIDrawer:
         self.draw_grid()
         self.update()
 
-    def get_indexes_from_coords(self,x,y):
+    def get_indexes_from_coords(self, x, y):
         i = int(math.floor(x / self.rect_size))
         j = int(math.floor(y / self.rect_size))
-        return i,j
+        return i, j

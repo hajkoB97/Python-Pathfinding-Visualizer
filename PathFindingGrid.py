@@ -22,7 +22,6 @@ class PathFinderGrid:
             temp_list = []
 
     def run(self):
-        print(self.source,self.end)
         self.init_distances()
         self.compute_distances()
         self.clear_grid_after_computing()
@@ -75,12 +74,9 @@ class PathFinderGrid:
                 self.distances.append(self.grid[i][j])
 
     def compute_distances(self):
-        print("LenSpt", len(self.spt), "GS", self.grid_size, "blocked",self.blocked_counter)
-        print(len(self.distances))
         while len(self.spt) != self.grid_size ** 2 - self.blocked_counter:
             if len(self.distances) != 0:
                 min_dist_node = min(self.distances)
-                print(min_dist_node)
                 if min_dist_node.distance == sys.maxsize:
                     break
                 self.distances.remove(min_dist_node)
@@ -101,7 +97,7 @@ class PathFinderGrid:
     def reset(self, event):
         self.blocked_counter = 0
         self.grid = []
-        self.end = (self.grid_size-1, self.grid_size-1)
+        self.end = (self.grid_size - 1, self.grid_size - 1)
         self.end_reached = False
         self.source = 0, 0
         self.spt = []
@@ -110,8 +106,8 @@ class PathFinderGrid:
         self.consturct_grid_node_array()
 
         self.ui.reset()
-        self.set_source(0,0)
-        self.set_end_point(self.end[0]* self.ui.rect_size,self.end[1]* self.ui.rect_size)
+        self.set_source(0, 0)
+        self.set_end_point(self.end[0] * self.ui.rect_size, self.end[1] * self.ui.rect_size)
 
     def get_node_by_index(self, position):
         i, j = position
@@ -126,7 +122,6 @@ class PathFinderGrid:
         self.source = (i, j)
         self.grid[i][j].set_color("green")
         self.grid[i][j].distance = 0
-
 
     def set_end_point(self, x, y):
         i = int(math.floor(x / self.ui.rect_size))
@@ -144,7 +139,7 @@ class PathFinderGrid:
         i = int(math.floor(x / self.ui.rect_size))
         j = int(math.floor(y / self.ui.rect_size))
 
-        if (i,j) == self.source or (i,j) == self.end:
+        if (i, j) == self.source or (i, j) == self.end:
             return
 
         if i < self.ui.row_num and j < self.ui.col_num:

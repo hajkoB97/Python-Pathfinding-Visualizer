@@ -1,17 +1,14 @@
 import tkinter
 import PathFindingGrid
 
+
 def start_btn():
     grid.run()
 
+
 def left_move(event):
     if state == "normal":
-        # if canvas.winfo_x() <= event.x <= canvas.winfo_x() + int(canvas['width']):
-        #     if canvas.winfo_y() <= event.y <= canvas.winfo_y() + int(canvas['height']):
-        print(event.x,event.y, canvas.winfo_x(), canvas.winfo_y(),canvas.winfo_rootx(), canvas.winfo_rooty(),)
-        # print(event.x,event.y)
         grid.set_blocked_state(event.x, event.y, True)
-
 
 
 def right_move(event):
@@ -19,8 +16,10 @@ def right_move(event):
         if canvas.winfo_y() <= event.y <= canvas.winfo_y() + int(canvas['height']):
             grid.set_blocked_state(event.x, event.y, False)
 
+
 def scale_canvas():
     grid.change_gridsize(scale_var.get(), scale_var.get())
+
 
 def set_point(event):
     global state
@@ -32,26 +31,27 @@ def set_point(event):
 
     canvas.unbind("<Button-1>")
     canvas.unbind("<Motion>")
-    grid.ui.current_rect_position = -1,-1
+    grid.ui.current_rect_position = -1, -1
     state = "normal"
+
 
 def set_source_btn():
     global state
     state = "placing_source_point"
-    print(state)
     canvas.bind("<Button-1>", set_point)
-    canvas.bind("<Motion>",lambda event: canvas_motion_event(event,"green"))
+    canvas.bind("<Motion>", lambda event: canvas_motion_event(event, "green"))
 
 
 def set_end_btn():
     global state
     state = "placing_end_point"
-    print(state)
     canvas.bind("<Button-1>", set_point)
-    canvas.bind("<Motion>",lambda event: canvas_motion_event(event,"black"))
+    canvas.bind("<Motion>", lambda event: canvas_motion_event(event, "black"))
 
-def canvas_motion_event(event,color):
-    grid.ui.draw_rect_on_hover(event.x, event.y,color)
+
+def canvas_motion_event(event, color):
+    grid.ui.draw_rect_on_hover(event.x, event.y, color)
+
 
 main = tkinter.Tk()
 main.title("Pathfinder Visualizer")
@@ -59,7 +59,7 @@ main.geometry("1000x1000")
 
 canvas = tkinter.Canvas(main, width=800, height=800)
 canvas.configure(bg="white")
-canvas.grid(row=1, column=1, rowspan=2,columnspan=4)
+canvas.grid(row=1, column=1, rowspan=2, columnspan=4)
 
 scale_var = tkinter.IntVar()
 w1 = tkinter.Scale(main, from_=5, to=60, tickinterval=5, length=600, variable=scale_var)
@@ -86,8 +86,6 @@ state = "normal"
 
 main.update()
 
-print("Root ", canvas.winfo_rootx(), canvas.winfo_rooty())
-print("XY, SCALE WIDTH ", canvas.winfo_x(), canvas.winfo_y(), w1['width'])
 canvas.bind("<B1-Motion>", left_move)
 canvas.bind("<B3-Motion>", right_move)
 main.bind("<Return>", grid.reset)
