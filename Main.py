@@ -1,7 +1,6 @@
 import tkinter
 import PathFindingGrid
 
-
 def start_btn():
     grid.run()
 
@@ -18,7 +17,7 @@ def right_move(event):
 
 
 def scale_canvas():
-    grid.change_gridsize(scale_var.get(), scale_var.get())
+    grid.change_grid_size(scale_var.get(), scale_var.get())
 
 
 def set_point(event):
@@ -52,6 +51,16 @@ def set_end_btn():
 def canvas_motion_event(event, color):
     grid.ui.draw_rect_on_hover(event.x, event.y, color)
 
+def reset(event):
+    grid.init()
+
+def exit_state(event):
+    global state
+    if state != "normal":
+        canvas.unbind("<Button-1>")
+        canvas.unbind("<Motion>")
+        grid.ui.clear_by_tag("hover")
+        state = "normal"
 
 main = tkinter.Tk()
 main.title("Pathfinder Visualizer")
@@ -83,10 +92,11 @@ btn_set_end.pack(side="left")
 grid = PathFindingGrid.PathFinderGrid(canvas)
 
 state = "normal"
-
 main.update()
 
 canvas.bind("<B1-Motion>", left_move)
 canvas.bind("<B3-Motion>", right_move)
-main.bind("<Return>", grid.reset)
+
+main.bind("<Return>", reset)
+main.bind("<Button-3>", exit_state)
 main.mainloop()

@@ -9,12 +9,16 @@ class GridNode:
         self.is_blocked = is_blocked
         self.ui = canvas
         self.distance = sys.maxsize
+        self.weight = 1
 
-    def get_neighbours(self, arr):
-
-        offsets = [(-1, 0), (0, -1), (1, 0), (0, 1)]
-
+    def get_neighbours(self, arr, ignore_corners = True):
+        offsets = []
         neighbours = []
+
+        if ignore_corners:
+            offsets = [(-1, 0), (0, -1), (1, 0), (0, 1)]
+        else:
+            offsets = [(-1,0), (-1,1), (0,1), (1,1), (1,0), (1,-1), (0,-1), (-1,-1)]
 
         for k, l in offsets:
             h_offset = self.i + k
@@ -28,8 +32,8 @@ class GridNode:
 
         return neighbours
 
-    def set_color(self, color):
-        self.ui.draw_rect(self.i, self.j, color)
+    def set_color(self, color, tag = None):
+        self.ui.draw_rect(self.i, self.j, color, tag)
 
     def __str__(self):
         return f"GRID_NODE[I: {self.i}, J: {self.j} IS_BLOCKED: {self.is_blocked}, DIST: {self.distance}]"
