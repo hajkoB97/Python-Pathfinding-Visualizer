@@ -8,11 +8,10 @@ class Algorithm(ABC):
         self.end_reached = False
         self.path = []
 
-
     def init_algorithm(self):
         pass
 
-    def run(self,visualize = False):
+    def run(self, visualize=False):
         pass
 
     def show_shortest_path(self):
@@ -20,3 +19,8 @@ class Algorithm(ABC):
 
     def reset(self):
         pass
+
+    def clear_grid_after_search(self):
+        self.ui.clear_by_tag("search")
+        self.grid.end_node.set_color("black", "end")
+        self.grid.source_node.set_color("green", "source")
