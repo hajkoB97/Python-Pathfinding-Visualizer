@@ -31,8 +31,8 @@ class GridNode:
 
         return neighbours
 
-    def set_color(self, color, tag=None):
-        self.grid.ui.draw_rect(self.i, self.j, color, tag)
+    def set_color(self, color, tag=None, foreground=False):
+        self.grid.ui.set_rect_color(self.i, self.j, color, tag, foreground=foreground)
 
     def __str__(self):
         return f"GRID_NODE[I: {self.i}, J: {self.j} IS_BLOCKED: {self.is_blocked}, DIST: {self.distance}]"

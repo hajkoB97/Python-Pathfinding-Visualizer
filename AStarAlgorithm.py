@@ -24,7 +24,7 @@ class AStarAlgorithm(Algorithm):
     def run(self, visualize=False):
         self.init_algorithm()
         self.start_search(visualize)
-        self.clear_grid_after_search()
+        self.ui.clear_search_visualization_rects()
 
         if self.end_reached:
             self.show_shortest_path()
@@ -38,13 +38,13 @@ class AStarAlgorithm(Algorithm):
             n.heuristic_dist = abs(n.i - self.grid.end_node.i) + abs(n.j - self.grid.end_node.j)
             n.distance = n.movement_cost_sum + n.heuristic_dist
             if visualize:
-                n.set_color("gray", "search")
+                n.set_color("gray", "search", foreground=True)
 
         while not len(self.open_list) == 0:
             min_node = self.get_min_distance_node(self.open_list)
             self.open_list.remove(min_node)
             if visualize:
-                min_node.set_color("gray", "search")
+                min_node.set_color("gray", "search", foreground=True)
             self.closed_list.append(min_node)
 
             neighbours = min_node.get_neighbours(self.grid)
@@ -66,7 +66,7 @@ class AStarAlgorithm(Algorithm):
                         n.distance = new_distance
                         n.parent = min_node
                         if visualize:
-                            n.set_color("SkyBlue1", "search")
+                            n.set_color("SkyBlue1", "search", foreground=True)
                         self.open_list.append(n)
 
             if self.end_reached:
@@ -95,7 +95,7 @@ class AStarAlgorithm(Algorithm):
         while parent != self.grid.source_node:
             if parent is None:
                 break
-            parent.set_color("yellow", "path")
+            parent.set_color("yellow", "path", foreground=True)
             self.path.append(parent)
             parent = parent.parent
 

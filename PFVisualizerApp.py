@@ -30,11 +30,11 @@ class PathFinderVisualizerApp:
         self.grid.construct()
         self._algorithm.init_algorithm()
 
-    def set_node_blocked_state(self, x, y, block=True):
+    def set_node_state(self, x, y, weight, color):
         i = int(math.floor(x / self.ui.rect_size))
         j = int(math.floor(y / self.ui.rect_size))
         if i < self.ui.row_num and j < self.ui.col_num:
-            self.grid.set_blocked_state(i, j, block)
+            self.grid.set_node_state(i, j, weight, color)
 
     def change_grid_size(self, col_num, row_num):
         self.ui.change_grid_size(col_num, row_num)

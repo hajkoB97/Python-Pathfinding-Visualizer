@@ -34,24 +34,25 @@ class Grid:
         self.ui.clear_by_tag("source")
         self.source_node = self.grid[i][j]
         self.source_node.set_color("green", "source")
+        self.source_node.is_blocked = False
 
     def set_end_node(self, i, j):
         self.ui.clear_by_tag("end")
         self.end_node = self.grid[i][j]
         self.end_node.set_color("black", "end")
+        self.end_node.is_blocked = False
 
-    def set_blocked_state(self, i, j, block=True):
+    def set_node_state(self, i, j, weight, color):
         node = self.grid[i][j]
         if node == self.source_node or node == self.end_node:
             return
-        if not node.is_blocked:
-            if block:
-                node.is_blocked = True
-                node.set_color("blue", "blocked")
+        if weight > 2:
+            node.is_blocked = True
         else:
-            if not block:
-                node.is_blocked = False
-                node.set_color("white")
+            node.weight = weight
+            node.is_blocked = False
+
+        node.set_color(color)
 
     def __getitem__(self, index):
         return self.grid[index]

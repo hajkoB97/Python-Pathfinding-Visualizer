@@ -10,8 +10,6 @@ class DijkstraAlgorithm(Algorithm):
         self.grid = grid
         self.distances = []
         self.spt = []
-        self.grid.source_node = self.grid[0][0]
-        self.grid.end_node = self.grid[self.grid.col_num - 1][self.grid.row_num - 1]
         self.init_algorithm()
 
     def init_algorithm(self):
@@ -26,7 +24,7 @@ class DijkstraAlgorithm(Algorithm):
         self.init_algorithm()
 
         self.start_search(visualize)
-        self.clear_grid_after_search()
+        self.ui.clear_search_visualization_rects()
         if self.end_reached:
             self.show_shortest_path()
 
@@ -40,7 +38,8 @@ class DijkstraAlgorithm(Algorithm):
 
             if min_dist_node not in self.spt:
                 neighbours = min_dist_node.get_neighbours(self.grid)
-                min_dist_node.set_color("gray", "search")
+                if visualize:
+                    min_dist_node.set_color("gray", foreground=True)
 
                 self.spt.append(min_dist_node)
 
@@ -52,10 +51,9 @@ class DijkstraAlgorithm(Algorithm):
                     if n.distance > min_dist_node.distance + n.weight:
                         n.distance = min_dist_node.distance + n.weight
                         if visualize:
-                            n.set_color("SkyBlue1", "search")
+                            n.set_color("SkyBlue1", foreground=True)
 
     def show_shortest_path(self):
-        self.ui.clear_by_tag("path")
         self.path.clear()
 
         got_source = False
@@ -72,7 +70,7 @@ class DijkstraAlgorithm(Algorithm):
 
         for i in self.path:
             if i is not self.grid.source_node:
-                i.set_color("yellow", "path")
+                i.set_color("yellow", "path", foreground=True)
 
     def init_distances(self):
         self.distances = []

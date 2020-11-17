@@ -9,12 +9,13 @@ def start_btn():
 
 def left_move(event):
     if state == "normal":
-        app.set_node_blocked_state(event.x, event.y, True)
+        weight, color = weight_colors[drawing_node_var.get()]
+        app.set_node_state(event.x, event.y, weight, color)
 
 
 def right_move(event):
     if state == "normal":
-        app.set_node_blocked_state(event.x, event.y, False)
+        app.set_node_state(event.x, event.y, 1, "white")
 
 
 def scale_canvas():
@@ -122,6 +123,16 @@ algorithm_menu = tkinter.OptionMenu(buttonFrame, algorithm_var, "Dijkstra Algori
                                     command=select_algorithm)
 algorithm_menu.pack(side="right", padx=(10, 10))
 
+drawing_node_var = tkinter.StringVar(main)
+drawing_node_var.set("Blocked")
+drawing_node_menu = tkinter.OptionMenu(buttonFrame, drawing_node_var,
+                                       "Light Weight", "Normal Weight", "Heavy Weight", "Blocked",
+                                       )
+drawing_node_menu.pack(side="right")
+
+weight_colors = {"Light Weight": (0.5, "CadetBlue1"), "Normal Weight": (1, "white"), "Heavy Weight": (2, "CadetBlue3"),
+                 "Blocked": (3, "navy")}
+
 app = PathFinderVisualizerApp(canvas)
 
 state = "normal"
@@ -129,8 +140,6 @@ main.update()
 
 canvas.bind("<B1-Motion>", left_move)
 canvas.bind("<B3-Motion>", right_move)
-
-
 
 main.bind("<Return>", reset)
 main.bind("<Button-3>", exit_state)

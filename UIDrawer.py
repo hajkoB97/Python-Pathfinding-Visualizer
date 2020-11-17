@@ -17,18 +17,31 @@ class UIDrawer:
         for i in range(self.col_num):
             temp = []
             for j in range(self.col_num):
-                temp.append(self.create_rect(i, j, "white"))
+                temp.append([self.create_rect(i, j, "white")])
             self.rect_grid.append(temp[:])
             temp.clear()
         self.update()
 
-    def create_rect(self, i, j, color=None, tag=None):
+    def create_rect(self, i, j, color, tag=None):
         x = i * self.rect_size
         y = j * self.rect_size
-        return self.canvas.create_rectangle(x, y, x + self.rect_size, y + self.rect_size, fill=color, tags=tag)
+        rect = self.canvas.create_rectangle(x, y, x + self.rect_size, y + self.rect_size, fill=color, tags=tag)
 
-    def draw_rect(self, i, j, color=None, tag=None):
-        self.canvas.itemconfigure(self.rect_grid[i][j], fill=color, tags=tag)
+        return rect
+
+    def set_rect_color(self, i, j, color=None, tag=None, foreground=False):
+        self.clear_overlaps_on_node(i, j)
+        if foreground:
+            self.rect_grid[i][j].append(self.create_rect(i, j, color, tag))
+        else:
+            self.canvas.itemconfigure(self.rect_grid[i][j][0], fill=color, tags=tag)
+
+    def clear_overlaps_on_node(self, i, j):
+        if len(self.rect_grid[i][j]) > 1:
+            rect_node_list = self.rect_grid[i][j]
+            for rect in rect_node_list[1:]:
+                self.canvas.delete(rect)
+            del rect_node_list[1:]
 
     def init(self):
         self.clear_by_tag('all')
@@ -75,6 +88,11 @@ class UIDrawer:
     def clear_by_tag(self, tag):
         self.canvas.itemconfig(tag, fill="white")
         self.canvas.dtag(tag, tag)
+
+    def clear_search_visualization_rects(self):
+        for i in range(self.col_num):
+            for j in range(self.row_num):
+                self.clear_overlaps_on_node(i, j)
 
     def clear_hover(self):
         self.canvas.delete(self.hovering_rect)
